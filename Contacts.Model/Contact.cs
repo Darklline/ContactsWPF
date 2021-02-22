@@ -1,6 +1,6 @@
 ﻿namespace Contacts.Model
 {
-    public class Friend
+    public class Contact
     {
         public int Id { get; set; }
         public string FirstName { get; set; }
