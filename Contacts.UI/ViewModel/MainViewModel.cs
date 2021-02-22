@@ -28,7 +28,7 @@ namespace Contacts.UI.ViewModel
 
         public ObservableCollection<Contact> Contacts { get; set; }
 
-        public Contact SelectedFriend
+        public Contact SelectedContact
         {
             get { return _selectedContact; }
             set

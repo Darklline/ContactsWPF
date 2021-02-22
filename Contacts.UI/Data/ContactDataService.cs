@@ -8,6 +8,7 @@ namespace Contacts.UI.Data
         public IEnumerable<Contact> GetAll()
         {
             yield return new Contact { Id = 0, FirstName = "Wojciech", LastName = "Preneta", Email = "wojciech.preneta@icloud.com" };
+            yield return new Contact { Id = 1, FirstName = "Marek", LastName = "Abc", Email = "abc@icloud.com" };
         }
     }
 }
