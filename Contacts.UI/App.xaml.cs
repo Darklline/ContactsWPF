@@ -1,5 +1,5 @@
-﻿using Contacts.UI.Data;
-using Contacts.UI.ViewModel;
+﻿using Autofac;
+using Contacts.UI.Startup;
 using System.Windows;
 
 namespace Contacts.UI
@@ -11,7 +11,10 @@ namespace Contacts.UI
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
-            var mainWindow = new MainWindow(new MainViewModel(new ContactDataService()));
+            var bootstrapper = new Bootstrapper();
+            var container = bootstrapper.Bootstrap();
+
+            var mainWindow = container.Resolve<MainWindow>();
             mainWindow.Show();
         }
     }
