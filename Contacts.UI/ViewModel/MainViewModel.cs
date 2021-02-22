@@ -1,6 +1,7 @@
 ﻿using Contacts.Model;
 using Contacts.UI.Data;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace Contacts.UI.ViewModel
 {
@@ -15,9 +16,9 @@ namespace Contacts.UI.ViewModel
             _contactDataService = contactDataService;
         }
 
-        public void Load()
+        public async Task LoadAsync()
         {
-            var contacts = _contactDataService.GetAll();
+            var contacts = await _contactDataService.GetAllAsync();
 
             Contacts.Clear();
             foreach (var contact in contacts)

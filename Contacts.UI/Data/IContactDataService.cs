@@ -1,10 +1,11 @@
 ﻿using Contacts.Model;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Contacts.UI.Data
 {
     public interface IContactDataService
     {
-        IEnumerable<Contact> GetAll();
+        Task<List<Contact>> GetAllAsync();
     }
 }
