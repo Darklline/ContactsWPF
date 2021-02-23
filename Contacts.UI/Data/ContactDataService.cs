@@ -1,7 +1,6 @@
 ﻿using Contacts.DataAccess;
 using Contacts.Model;
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Threading.Tasks;
 
@@ -15,11 +14,11 @@ namespace Contacts.UI.Data
         {
             _contextCreator = contextCreator;
         }
-        public async Task<List<Contact>> GetAllAsync()
+        public async Task<Contact> GetByIdAsync(int contactId)
         {
             using (var ctx = _contextCreator())
             {
-                return await ctx.Contacts.AsNoTracking().ToListAsync();
+                return await ctx.Contacts.AsNoTracking().SingleAsync(c => c.Id == contactId);
             }
         }
     }

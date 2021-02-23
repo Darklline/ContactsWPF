@@ -2,6 +2,7 @@
 using Contacts.DataAccess;
 using Contacts.UI.Data;
 using Contacts.UI.ViewModel;
+using FriendOrganizer.UI.ViewModel;
 
 namespace Contacts.UI.Startup
 {
@@ -13,6 +14,9 @@ namespace Contacts.UI.Startup
             builder.RegisterType<ContactDbContext>().AsSelf();
             builder.RegisterType<MainWindow>().AsSelf();
             builder.RegisterType<MainViewModel>().AsSelf();
+            builder.RegisterType<NavigationViewModel>().As<INavigationViewModel>();
+            builder.RegisterType<ContactDetailViewModel>().As<IContactDetailViewModel>();
+            builder.RegisterType<LookUpDataService>().AsImplementedInterfaces();
             builder.RegisterType<ContactDataService>().As<IContactDataService>();
 
             return builder.Build();
