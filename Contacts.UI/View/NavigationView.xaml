@@ -8,6 +8,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
       <ListView ItemsSource="{Binding Contacts}"
+                SelectedItem="{Binding SelectedContact,Mode=TwoWay}"
               DisplayMemberPath="DisplayMember"/>
   </Grid>
 </UserControl>
