@@ -3,7 +3,9 @@ using Contacts.UI.Data;
 using Contacts.UI.Event;
 using Contacts.UI.ViewModel;
 using Prism.Events;
+using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FriendOrganizer.UI.ViewModel
@@ -17,7 +19,14 @@ namespace FriendOrganizer.UI.ViewModel
         {
             _friendLookupService = friendLookupService;
             _eventAggregator = eventAggregator;
-            Contacts = new ObservableCollection<LookUpItem>();
+            Contacts = new ObservableCollection<NavigationItemViewModel>();
+            _eventAggregator.GetEvent<AfterContactSavedEvent>().Subscribe(AfterContactSaved);
+        }
+
+        private void AfterContactSaved(AfterContactSavedEventArgs obj)
+        {
+            var lookupItem = Contacts.Single(l => l.Id == obj.Id);
+            lookupItem.DisplayMember = obj.DisplayMember;
         }
 
         public async Task LoadAsync()
@@ -26,14 +35,14 @@ namespace FriendOrganizer.UI.ViewModel
             Contacts.Clear();
             foreach (var item in lookup)
             {
-                Contacts.Add(item);
+                Contacts.Add(new NavigationItemViewModel(item.Id, item.DisplayMember));
             }
         }
 
-        public ObservableCollection<LookUpItem> Contacts { get; }
-        private LookUpItem _selectedContact;
+        public ObservableCollection<NavigationItemViewModel> Contacts { get; }
+        private NavigationItemViewModel _selectedContact;
 
-        public LookUpItem SelectedContact
+        public NavigationItemViewModel SelectedContact
         {
             get { return _selectedContact; }
             set

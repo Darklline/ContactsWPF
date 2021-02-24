@@ -21,5 +21,15 @@ namespace Contacts.UI.Data
                 return await ctx.Contacts.AsNoTracking().SingleAsync(c => c.Id == contactId);
             }
         }
+
+        public async Task SaveAsync(Contact contact)
+        {
+            using (var ctx = _contextCreator())
+            {
+                ctx.Contacts.Attach(contact);
+                ctx.Entry(contact).State = EntityState.Modified;
+                await ctx.SaveChangesAsync();
+            }
+        }
     }
 }
