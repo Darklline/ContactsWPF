@@ -1,10 +1,8 @@
 ﻿using Autofac;
 using Contacts.DataAccess;
-using Contacts.UI.Data;
 using Contacts.UI.Data.Lookups;
 using Contacts.UI.Data.Repositories;
 using Contacts.UI.ViewModel;
-using FriendOrganizer.UI.ViewModel;
 using Prism.Events;
 
 namespace Contacts.UI.Startup

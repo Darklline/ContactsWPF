@@ -6,6 +6,7 @@ namespace Contacts.UI.Data.Repositories
     public interface IContactRepository
     {
         Task<Contact> GetByIdAsync(int contactId);
-        Task SaveAsync(Contact contact);
+        Task SaveAsync();
+        bool HasChanges();
     }
 }

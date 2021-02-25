@@ -1,24 +1,20 @@
-﻿using Contacts.Model;
-using Contacts.UI.Data;
+﻿using Contacts.UI.Data.Lookups;
 using Contacts.UI.Event;
-using Contacts.UI.ViewModel;
 using Prism.Events;
-using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
-using Contacts.UI.Data.Lookups;
 
-namespace FriendOrganizer.UI.ViewModel
+namespace Contacts.UI.ViewModel
 {
     public class NavigationViewModel : ViewModelBase, INavigationViewModel
     {
-        private IContactLookUpDataService _friendLookupService;
+        private readonly IContactLookUpDataService _contactLookupService;
         private readonly IEventAggregator _eventAggregator;
 
-        public NavigationViewModel(IContactLookUpDataService friendLookupService, IEventAggregator eventAggregator)
+        public NavigationViewModel(IContactLookUpDataService contactLookupService, IEventAggregator eventAggregator)
         {
-            _friendLookupService = friendLookupService;
+            _contactLookupService = contactLookupService;
             _eventAggregator = eventAggregator;
             Contacts = new ObservableCollection<NavigationItemViewModel>();
             _eventAggregator.GetEvent<AfterContactSavedEvent>().Subscribe(AfterContactSaved);
@@ -32,7 +28,7 @@ namespace FriendOrganizer.UI.ViewModel
 
         public async Task LoadAsync()
         {
-            var lookup = await _friendLookupService.GetContactLookUpAsync();
+            var lookup = await _contactLookupService.GetContactLookUpAsync();
             Contacts.Clear();
             foreach (var item in lookup)
             {

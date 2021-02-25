@@ -1,35 +1,32 @@
-﻿using System;
+﻿using Contacts.DataAccess;
+using Contacts.Model;
 using System.Data.Entity;
 using System.Threading.Tasks;
-using Contacts.DataAccess;
-using Contacts.Model;
 
 namespace Contacts.UI.Data.Repositories
 {
     public class ContactRepository : IContactRepository
     {
-        private readonly Func<ContactDbContext> _contextCreator;
+        private readonly ContactDbContext _context;
 
-        public ContactRepository(Func<ContactDbContext> contextCreator)
+        public ContactRepository(ContactDbContext contextCreator)
         {
-            _contextCreator = contextCreator;
+            _context = contextCreator;
         }
         public async Task<Contact> GetByIdAsync(int contactId)
         {
-            using (var ctx = _contextCreator())
-            {
-                return await ctx.Contacts.AsNoTracking().SingleAsync(c => c.Id == contactId);
-            }
+            return await _context.Contacts.SingleAsync(c => c.Id == contactId);
+
         }
 
-        public async Task SaveAsync(Contact contact)
+        public async Task SaveAsync()
         {
-            using (var ctx = _contextCreator())
-            {
-                ctx.Contacts.Attach(contact);
-                ctx.Entry(contact).State = EntityState.Modified;
-                await ctx.SaveChangesAsync();
-            }
+            await _context.SaveChangesAsync();
+        }
+
+        public bool HasChanges()
+        {
+            return _context.ChangeTracker.HasChanges();
         }
     }
 }
