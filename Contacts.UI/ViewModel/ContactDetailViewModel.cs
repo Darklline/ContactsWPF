@@ -1,9 +1,8 @@
-﻿using Contacts.Model;
-using Contacts.UI.Data;
+﻿using Contacts.UI.Data;
 using Contacts.UI.Event;
+using Contacts.UI.Wrapper;
 using Prism.Commands;
 using Prism.Events;
-using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -13,6 +12,8 @@ namespace Contacts.UI.ViewModel
     {
         private IContactDataService _dataService;
         private readonly IEventAggregator _eventAggregator;
+        private ContactWrapper _contact;
+        public ICommand SaveCommand { get; }
 
         public ContactDetailViewModel(IContactDataService dataService, IEventAggregator eventAggregator)
         {
@@ -24,14 +25,40 @@ namespace Contacts.UI.ViewModel
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
         }
 
+        public async Task LoadAsync(int friendId)
+        {
+            var contact = await _dataService.GetByIdAsync(friendId);
+
+            Contact = new ContactWrapper(contact);
+            Contact.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == nameof(Contact.HasErrors))
+                {
+                    ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+                }
+            };
+
+            ((DelegateCommand)SaveCommand).RaiseCanExecuteChanged();
+        }
+
+        public ContactWrapper Contact
+        {
+            get { return _contact; }
+            private set
+            {
+                _contact = value;
+                OnPropertyChanged();
+            }
+        }
+
         private bool OnSaveCanExecute()
         {
-            return true;
+            return Contact != null && !Contact.HasErrors;
         }
 
         private async void OnSaveExecute()
         {
-            await _dataService.SaveAsync(Contact);
+            await _dataService.SaveAsync(Contact.Model);
             _eventAggregator.GetEvent<AfterContactSavedEvent>().Publish(new AfterContactSavedEventArgs
             {
                 Id = Contact.Id,
@@ -43,23 +70,5 @@ namespace Contacts.UI.ViewModel
         {
             await LoadAsync(friendId);
         }
-
-        public async Task LoadAsync(int friendId)
-        {
-            Contact = await _dataService.GetByIdAsync(friendId);
-        }
-
-        private Contact _contact;
-
-        public Contact Contact
-        {
-            get { return _contact; }
-            private set
-            {
-                _contact = value;
-                OnPropertyChanged();
-            }
-        }
-        public ICommand SaveCommand { get; }
     }
 }
