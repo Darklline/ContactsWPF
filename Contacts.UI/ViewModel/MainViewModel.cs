@@ -1,19 +1,21 @@
 ﻿using Contacts.UI.Event;
+using Contacts.UI.View.Services;
 using Prism.Events;
 using System;
 using System.Threading.Tasks;
-using System.Windows;
 
 namespace Contacts.UI.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
         private readonly Func<IContactDetailViewModel> _contactDetailViewModelCreator;
+        private readonly IMessageDialogService _messageDialogService;
         private IContactDetailViewModel _contactDetailViewModel;
 
-        public MainViewModel(INavigationViewModel navigationViewModel, Func<IContactDetailViewModel> contactDetailViewModelCreator, IEventAggregator eventAggregator)
+        public MainViewModel(INavigationViewModel navigationViewModel, Func<IContactDetailViewModel> contactDetailViewModelCreator, IEventAggregator eventAggregator, IMessageDialogService messageDialogService)
         {
             _contactDetailViewModelCreator = contactDetailViewModelCreator;
+            _messageDialogService = messageDialogService;
 
             eventAggregator.GetEvent<OpenContactDetailViewEvent>()
                 .Subscribe(OnOpenContactDetailView);
@@ -42,8 +44,8 @@ namespace Contacts.UI.ViewModel
         {
             if (ContactDetailViewModel != null && ContactDetailViewModel.HasChanges)
             {
-                var result = MessageBox.Show("Changes were made. Do u wanna leave ?", "Question", MessageBoxButton.OKCancel);
-                if (result == MessageBoxResult.Cancel)
+                var result = _messageDialogService.ShowOkCancelDialog("Changes were made. Do u wanna leave ?", "Question");
+                if (result == MessageDialogResult.Cancel)
                 {
                     return;
                 }

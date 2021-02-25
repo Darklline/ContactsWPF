@@ -32,27 +32,10 @@ namespace Contacts.UI.ViewModel
             Contacts.Clear();
             foreach (var item in lookup)
             {
-                Contacts.Add(new NavigationItemViewModel(item.Id, item.DisplayMember));
+                Contacts.Add(new NavigationItemViewModel(item.Id, item.DisplayMember, _eventAggregator));
             }
         }
 
         public ObservableCollection<NavigationItemViewModel> Contacts { get; }
-        private NavigationItemViewModel _selectedContact;
-
-        public NavigationItemViewModel SelectedContact
-        {
-            get { return _selectedContact; }
-            set
-            {
-                _selectedContact = value;
-                OnPropertyChanged();
-                if (_selectedContact != null)
-                {
-                    _eventAggregator.GetEvent<OpenContactDetailViewEvent>()
-                        .Publish(_selectedContact.Id);
-                }
-            }
-        }
-
     }
 }
