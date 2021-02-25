@@ -93,10 +93,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Data\ContactDataService.cs" />
-    <Compile Include="Data\IContactDataService.cs" />
-    <Compile Include="Data\IContactLookUpDataService.cs" />
-    <Compile Include="Data\LookUpDataService.cs" />
+    <Compile Include="Data\Repositories\ContactRepository.cs" />
+    <Compile Include="Data\Repositories\IContactRepository.cs" />
+    <Compile Include="Data\Lookups\IContactLookUpDataService.cs" />
+    <Compile Include="Data\Lookups\LookUpDataService.cs" />
     <Compile Include="Event\AfterContactSavedEvent.cs" />
     <Compile Include="Event\OpenContactDetailViewEvent.cs" />
     <Compile Include="Startup\Bootstrapper.cs" />

@@ -5,19 +5,20 @@ using Prism.Commands;
 using Prism.Events;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Contacts.UI.Data.Repositories;
 
 namespace Contacts.UI.ViewModel
 {
     public class ContactDetailViewModel : ViewModelBase, IContactDetailViewModel
     {
-        private IContactDataService _dataService;
+        private IContactRepository _repository;
         private readonly IEventAggregator _eventAggregator;
         private ContactWrapper _contact;
         public ICommand SaveCommand { get; }
 
-        public ContactDetailViewModel(IContactDataService dataService, IEventAggregator eventAggregator)
+        public ContactDetailViewModel(IContactRepository repository, IEventAggregator eventAggregator)
         {
-            _dataService = dataService;
+            _repository = repository;
             _eventAggregator = eventAggregator;
             _eventAggregator.GetEvent<OpenContactDetailViewEvent>()
                 .Subscribe(OnOpenContactDetailView);
@@ -27,7 +28,7 @@ namespace Contacts.UI.ViewModel
 
         public async Task LoadAsync(int friendId)
         {
-            var contact = await _dataService.GetByIdAsync(friendId);
+            var contact = await _repository.GetByIdAsync(friendId);
 
             Contact = new ContactWrapper(contact);
             Contact.PropertyChanged += (s, e) =>
@@ -58,7 +59,7 @@ namespace Contacts.UI.ViewModel
 
         private async void OnSaveExecute()
         {
-            await _dataService.SaveAsync(Contact.Model);
+            await _repository.SaveAsync(Contact.Model);
             _eventAggregator.GetEvent<AfterContactSavedEvent>().Publish(new AfterContactSavedEventArgs
             {
                 Id = Contact.Id,

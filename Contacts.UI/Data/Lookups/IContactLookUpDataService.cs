@@ -1,8 +1,8 @@
-﻿using Contacts.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Contacts.Model;
 
-namespace Contacts.UI.Data
+namespace Contacts.UI.Data.Lookups
 {
     public interface IContactLookUpDataService
     {

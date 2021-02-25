@@ -1,6 +1,8 @@
 ﻿using Autofac;
 using Contacts.DataAccess;
 using Contacts.UI.Data;
+using Contacts.UI.Data.Lookups;
+using Contacts.UI.Data.Repositories;
 using Contacts.UI.ViewModel;
 using FriendOrganizer.UI.ViewModel;
 using Prism.Events;
@@ -20,7 +22,7 @@ namespace Contacts.UI.Startup
             builder.RegisterType<NavigationViewModel>().As<INavigationViewModel>();
             builder.RegisterType<ContactDetailViewModel>().As<IContactDetailViewModel>();
             builder.RegisterType<LookUpDataService>().AsImplementedInterfaces();
-            builder.RegisterType<ContactDataService>().As<IContactDataService>();
+            builder.RegisterType<ContactRepository>().As<IContactRepository>();
 
             return builder.Build();
         }

@@ -1,16 +1,16 @@
-﻿using Contacts.DataAccess;
-using Contacts.Model;
-using System;
+﻿using System;
 using System.Data.Entity;
 using System.Threading.Tasks;
+using Contacts.DataAccess;
+using Contacts.Model;
 
-namespace Contacts.UI.Data
+namespace Contacts.UI.Data.Repositories
 {
-    public class ContactDataService : IContactDataService
+    public class ContactRepository : IContactRepository
     {
         private readonly Func<ContactDbContext> _contextCreator;
 
-        public ContactDataService(Func<ContactDbContext> contextCreator)
+        public ContactRepository(Func<ContactDbContext> contextCreator)
         {
             _contextCreator = contextCreator;
         }
