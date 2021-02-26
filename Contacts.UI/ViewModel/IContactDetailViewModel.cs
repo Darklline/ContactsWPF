@@ -4,7 +4,7 @@ namespace Contacts.UI.ViewModel
 {
   public interface IContactDetailViewModel
   {
-    Task LoadAsync(int contactId);
+    Task LoadAsync(int? contactId);
     bool HasChanges { get; }
   }
 }

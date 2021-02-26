@@ -2,7 +2,7 @@
 
 namespace Contacts.UI.Event
 {
-    public class OpenContactDetailViewEvent : PubSubEvent<int>
+    public class OpenContactDetailViewEvent : PubSubEvent<int?>
     {
 
     }

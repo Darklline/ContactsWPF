@@ -3,6 +3,8 @@ using Contacts.UI.View.Services;
 using Prism.Events;
 using System;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using Prism.Commands;
 
 namespace Contacts.UI.ViewModel
 {
@@ -20,10 +22,13 @@ namespace Contacts.UI.ViewModel
             eventAggregator.GetEvent<OpenContactDetailViewEvent>()
                 .Subscribe(OnOpenContactDetailView);
 
+            CreateNewContactCommand = new DelegateCommand(OnCreateNewContactExecute);
+
             NavigationViewModel = navigationViewModel;
         }
 
         public INavigationViewModel NavigationViewModel { get; }
+        public ICommand CreateNewContactCommand { get; }
 
         public IContactDetailViewModel ContactDetailViewModel
         {
@@ -40,7 +45,7 @@ namespace Contacts.UI.ViewModel
             await NavigationViewModel.LoadAsync();
         }
 
-        private async void OnOpenContactDetailView(int contactId)
+        private async void OnOpenContactDetailView(int? contactId)
         {
             if (ContactDetailViewModel != null && ContactDetailViewModel.HasChanges)
             {
@@ -51,8 +56,12 @@ namespace Contacts.UI.ViewModel
                 }
             }
             ContactDetailViewModel = _contactDetailViewModelCreator();
-
             await ContactDetailViewModel.LoadAsync(contactId);
+        }
+
+        private void OnCreateNewContactExecute()
+        {
+            OnOpenContactDetailView(null);
         }
     }
 }

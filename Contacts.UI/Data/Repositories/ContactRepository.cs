@@ -28,5 +28,10 @@ namespace Contacts.UI.Data.Repositories
         {
             return _context.ChangeTracker.HasChanges();
         }
+
+        public void Add(Contact contact)
+        {
+            _context.Contacts.Add(contact);
+        }
     }
 }

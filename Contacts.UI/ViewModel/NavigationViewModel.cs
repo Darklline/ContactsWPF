@@ -20,12 +20,6 @@ namespace Contacts.UI.ViewModel
             _eventAggregator.GetEvent<AfterContactSavedEvent>().Subscribe(AfterContactSaved);
         }
 
-        private void AfterContactSaved(AfterContactSavedEventArgs obj)
-        {
-            var lookupItem = Contacts.Single(l => l.Id == obj.Id);
-            lookupItem.DisplayMember = obj.DisplayMember;
-        }
-
         public async Task LoadAsync()
         {
             var lookup = await _contactLookupService.GetContactLookUpAsync();
@@ -37,5 +31,18 @@ namespace Contacts.UI.ViewModel
         }
 
         public ObservableCollection<NavigationItemViewModel> Contacts { get; }
+
+        private void AfterContactSaved(AfterContactSavedEventArgs obj)
+        {
+            var lookupItem = Contacts.SingleOrDefault(l => l.Id == obj.Id);
+            if (lookupItem == null)
+            {
+                Contacts.Add(new NavigationItemViewModel(obj.Id, obj.DisplayMember, _eventAggregator));
+            }
+            else
+            {
+                lookupItem.DisplayMember = obj.DisplayMember;
+            }
+        }
     }
 }

@@ -8,5 +8,6 @@ namespace Contacts.UI.Data.Repositories
         Task<Contact> GetByIdAsync(int contactId);
         Task SaveAsync();
         bool HasChanges();
+        void Add(Contact contact);
     }
 }

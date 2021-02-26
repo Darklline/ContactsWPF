@@ -5,6 +5,7 @@ using Prism.Commands;
 using Prism.Events;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Contacts.Model;
 
 namespace Contacts.UI.ViewModel
 {
@@ -24,9 +25,9 @@ namespace Contacts.UI.ViewModel
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
         }
 
-        public async Task LoadAsync(int contactId)
+        public async Task LoadAsync(int? contactId)
         {
-            var contact = await _contactRepository.GetByIdAsync(contactId);
+            var contact = contactId.HasValue ? await _contactRepository.GetByIdAsync(contactId.Value) : CreateNewContact();
 
             Contact = new ContactWrapper(contact);
             Contact.PropertyChanged += (s, e) =>
@@ -42,6 +43,10 @@ namespace Contacts.UI.ViewModel
             };
 
             ((DelegateCommand) SaveCommand).RaiseCanExecuteChanged();
+            if (Contact.Id == 0)
+            {
+                Contact.FirstName = "";
+            }
         }
 
         public bool HasChanges
@@ -80,6 +85,14 @@ namespace Contacts.UI.ViewModel
                 Id = Contact.Id,
                 DisplayMember = $"{Contact.FirstName} {Contact.LastName}"
             });
+        }
+
+        private Contact CreateNewContact()
+        {
+            var contact = new Contact();
+            _contactRepository.Add(contact);
+
+            return contact;
         }
     }
 }
