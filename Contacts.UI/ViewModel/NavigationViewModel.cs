@@ -18,6 +18,7 @@ namespace Contacts.UI.ViewModel
             _eventAggregator = eventAggregator;
             Contacts = new ObservableCollection<NavigationItemViewModel>();
             _eventAggregator.GetEvent<AfterContactSavedEvent>().Subscribe(AfterContactSaved);
+            _eventAggregator.GetEvent<AfterContactDeletedEvent>().Subscribe(AfterContactDeleted);
         }
 
         public async Task LoadAsync()
@@ -42,6 +43,15 @@ namespace Contacts.UI.ViewModel
             else
             {
                 lookupItem.DisplayMember = obj.DisplayMember;
+            }
+        }
+
+        private void AfterContactDeleted(int contactId)
+        {
+            var contact = Contacts.SingleOrDefault(c => c.Id == contactId);
+            if (contact != null)
+            {
+                Contacts.Remove(contact);
             }
         }
     }

@@ -97,6 +97,7 @@
     <Compile Include="Data\Repositories\IContactRepository.cs" />
     <Compile Include="Data\Lookups\IContactLookUpDataService.cs" />
     <Compile Include="Data\Lookups\LookUpDataService.cs" />
+    <Compile Include="Event\AfterContactDeletedEvent.cs" />
     <Compile Include="Event\AfterContactSavedEvent.cs" />
     <Compile Include="Event\OpenContactDetailViewEvent.cs" />
     <Compile Include="Startup\Bootstrapper.cs" />

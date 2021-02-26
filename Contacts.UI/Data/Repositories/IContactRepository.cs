@@ -9,5 +9,6 @@ namespace Contacts.UI.Data.Repositories
         Task SaveAsync();
         bool HasChanges();
         void Add(Contact contact);
+        void Remove(Contact contactModel);
     }
 }

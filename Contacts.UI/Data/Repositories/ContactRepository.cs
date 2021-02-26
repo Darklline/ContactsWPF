@@ -33,5 +33,10 @@ namespace Contacts.UI.Data.Repositories
         {
             _context.Contacts.Add(contact);
         }
+
+        public void Remove(Contact contactModel)
+        {
+            _context.Contacts.Remove(contactModel);
+        }
     }
 }

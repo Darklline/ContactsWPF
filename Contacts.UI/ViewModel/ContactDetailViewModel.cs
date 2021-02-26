@@ -16,6 +16,7 @@ namespace Contacts.UI.ViewModel
         private bool _hasChanges;
         private ContactWrapper _contact;
         public ICommand SaveCommand { get; }
+        public ICommand DeleteCommand { get; }
 
         public ContactDetailViewModel(IContactRepository contactRepository, IEventAggregator eventAggregator)
         {
@@ -23,6 +24,7 @@ namespace Contacts.UI.ViewModel
             _eventAggregator = eventAggregator;
 
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
+            DeleteCommand = new DelegateCommand(OnDeleteExecute);
         }
 
         public async Task LoadAsync(int? contactId)
@@ -93,6 +95,13 @@ namespace Contacts.UI.ViewModel
             _contactRepository.Add(contact);
 
             return contact;
+        }
+
+        private async void OnDeleteExecute()
+        {
+            _contactRepository.Remove(Contact.Model);
+            await _contactRepository.SaveAsync();
+            _eventAggregator.GetEvent<AfterContactDeletedEvent>().Publish(Contact.Id);
         }
     }
 }
