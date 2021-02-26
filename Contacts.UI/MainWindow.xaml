@@ -3,9 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:Contacts.UI" xmlns:view="clr-namespace:Contacts.UI.View"
+        xmlns:local="clr-namespace:Contacts.UI"
+        xmlns:view="clr-namespace:Contacts.UI.View"
+        xmlns:viewModel="clr-namespace:Contacts.UI.ViewModel"
         mc:Ignorable="d"
         Title="Contacts" Height="450" Width="800" FontSize="20">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewModel:ContactDetailViewModel}">
+            <view:ContactDetailView />
+        </DataTemplate>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -21,6 +28,6 @@
             </MenuItem>
         </Menu>
         <view:NavigationView Grid.Row="1" DataContext="{Binding NavigationViewModel}" />
-        <view:ContactDetailView Grid.Row="1" Grid.Column="1" DataContext="{Binding ContactDetailViewModel}" />
+        <ContentControl Grid.Row="1" Grid.Column="1" Content="{Binding ContactDetailViewModel}" />
     </Grid>
 </Window>

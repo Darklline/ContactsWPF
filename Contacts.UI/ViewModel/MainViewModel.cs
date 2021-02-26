@@ -1,10 +1,10 @@
 ﻿using Contacts.UI.Event;
 using Contacts.UI.View.Services;
+using Prism.Commands;
 using Prism.Events;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Prism.Commands;
 
 namespace Contacts.UI.ViewModel
 {
@@ -21,6 +21,9 @@ namespace Contacts.UI.ViewModel
 
             eventAggregator.GetEvent<OpenContactDetailViewEvent>()
                 .Subscribe(OnOpenContactDetailView);
+
+            eventAggregator.GetEvent<AfterContactDeletedEvent>()
+                .Subscribe(AfterContactDeleted);
 
             CreateNewContactCommand = new DelegateCommand(OnCreateNewContactExecute);
 
@@ -62,6 +65,11 @@ namespace Contacts.UI.ViewModel
         private void OnCreateNewContactExecute()
         {
             OnOpenContactDetailView(null);
+        }
+
+        private void AfterContactDeleted(int contactId)
+        {
+            ContactDetailViewModel = null;
         }
     }
 }

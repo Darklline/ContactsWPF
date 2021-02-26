@@ -6,6 +6,7 @@ using Prism.Events;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Contacts.Model;
+using Contacts.UI.View.Services;
 
 namespace Contacts.UI.ViewModel
 {
@@ -13,15 +14,18 @@ namespace Contacts.UI.ViewModel
     {
         private readonly IContactRepository _contactRepository;
         private readonly IEventAggregator _eventAggregator;
+        private readonly IMessageDialogService _messageDialogService;
         private bool _hasChanges;
         private ContactWrapper _contact;
         public ICommand SaveCommand { get; }
         public ICommand DeleteCommand { get; }
 
-        public ContactDetailViewModel(IContactRepository contactRepository, IEventAggregator eventAggregator)
+        public ContactDetailViewModel(IContactRepository contactRepository, IEventAggregator eventAggregator,
+            IMessageDialogService messageDialogService)
         {
             _contactRepository = contactRepository;
             _eventAggregator = eventAggregator;
+            _messageDialogService = messageDialogService;
 
             SaveCommand = new DelegateCommand(OnSaveExecute, OnSaveCanExecute);
             DeleteCommand = new DelegateCommand(OnDeleteExecute);
@@ -29,7 +33,9 @@ namespace Contacts.UI.ViewModel
 
         public async Task LoadAsync(int? contactId)
         {
-            var contact = contactId.HasValue ? await _contactRepository.GetByIdAsync(contactId.Value) : CreateNewContact();
+            var contact = contactId.HasValue
+                ? await _contactRepository.GetByIdAsync(contactId.Value)
+                : CreateNewContact();
 
             Contact = new ContactWrapper(contact);
             Contact.PropertyChanged += (s, e) =>
@@ -38,6 +44,7 @@ namespace Contacts.UI.ViewModel
                 {
                     HasChanges = _contactRepository.HasChanges();
                 }
+
                 if (e.PropertyName == nameof(Contact.HasErrors))
                 {
                     ((DelegateCommand) SaveCommand).RaiseCanExecuteChanged();
@@ -99,9 +106,15 @@ namespace Contacts.UI.ViewModel
 
         private async void OnDeleteExecute()
         {
-            _contactRepository.Remove(Contact.Model);
-            await _contactRepository.SaveAsync();
-            _eventAggregator.GetEvent<AfterContactDeletedEvent>().Publish(Contact.Id);
+            var result =
+                _messageDialogService.ShowOkCancelDialog(
+                    $"Are u sure u wanna delete {Contact.FirstName} {Contact.LastName} ?", "Question");
+            if (result == MessageDialogResult.Ok)
+            {
+                _contactRepository.Remove(Contact.Model);
+                await _contactRepository.SaveAsync();
+                _eventAggregator.GetEvent<AfterContactDeletedEvent>().Publish(Contact.Id);
+            }
         }
     }
 }
